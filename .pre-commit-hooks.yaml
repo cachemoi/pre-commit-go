@@ -1,0 +1,53 @@
+# generic pre commit hooks
+
+- repo: git://github.com/pre-commit/pre-commit-hooks
+  rev: v0.7.1
+  hooks:
+    - id: check-merge-conflict
+    - id: check-yaml
+    - id: trailing-whitespace
+    - id: detect-private-key
+
+# go specific hooks
+
+- id: go-golangci-lint
+  name: "Run golangci-lint"
+  description: Static analysis for Go code
+  entry: golangci-lint run
+  types: [go]
+  language: golang
+  pass_filenames: false
+
+- id: go-test
+  name: "Go tests"
+  entry: run-go-test.sh
+  types: [go]
+  language: "script"
+  pass_filenames: false
+  minimum_pre_commit_version: 0.15.0
+  description: "Runs `go test ./...` at the repo root"
+
+- id: go-goimports
+  name: "Check Go imports"
+  entry: run-go-imports.sh
+  types: [go]
+  language: "script"
+  pass_filenames: true
+  minimum_pre_commit_version: 0.15.0
+  description: "Runs `goimports` on changed files"
+  require_serial: true
+  exclude: "vendor/"
+
+- id: go-mod-tidy
+  name: "go-mod-tidy"
+  entry: run-go-mod-tidy.sh
+  files: '\.go$'
+  language: "script"
+  description: "Runs `go mod tidy -v`, requires golang"
+
+- id: go-mod-vendor
+  name: "go-mod-vendor"
+  entry: run-go-mod-vendor.sh
+  files: '\.go$'
+  language: "script"
+  description: "Runs `go mod vendor`, requires golang"
